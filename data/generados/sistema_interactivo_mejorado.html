@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_9c31805b10d8dfc160f541f2b66272f0 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+</head>
+<body>
+    
+    
+        <div id="control-panel" style="position: fixed; 
+                    top: 10px; left: 50px; width: 300px; 
+                    background: rgba(0,0,0,0.8); color: white; 
+                    border: 2px solid #00ff00; padding: 15px;
+                    border-radius: 10px; z-index: 9999; font-family: Arial;">
+            <h3 style="margin:0 0 10px 0; color: #00ff00;">🚲 RUTEADOR CICLISTA</h3>
+            
+            <div style="margin-bottom: 10px;">
+                <strong>Origen:</strong>
+                <span id="origen-text" style="color: #00ff00;">No seleccionado</span>
+            </div>
+            
+            <div style="margin-bottom: 10px;">
+                <strong>Destino:</strong>
+                <span id="destino-text" style="color: #ff4444;">No seleccionado</span>
+            </div>
+            
+            <button onclick="calculateRoute()" 
+                    style="background: #00ff00; color: black; border: none; 
+                           padding: 8px 15px; border-radius: 5px; cursor: pointer;
+                           font-weight: bold; width: 100%;">
+                🛣️ CALCULAR RUTA
+            </button>
+            
+            <div style="margin-top: 10px; font-size: 12px; color: #ccc;">
+                💡 Selecciona origen y destino haciendo click en los nodos
+            </div>
+        </div>
+
+        <script>
+        let origen = null;
+        let destino = null;
+        
+        function selectOrigin(nodeId) {
+            origen = nodeId;
+            document.getElementById('origen-text').textContent = 'Nodo ' + nodeId;
+            updateMap();
+        }
+        
+        function selectDest(nodeId) {
+            destino = nodeId;
+            document.getElementById('destino-text').textContent = 'Nodo ' + nodeId;
+            updateMap();
+        }
+        
+        function calculateRoute() {
+            if (!origen || !destino) {
+                alert('⚠️ Por favor selecciona origen y destino');
+                return;
+            }
+            
+            // Aquí iría la llamada al backend para calcular la ruta
+            // Por ahora simulamos con un alert
+            alert('🛣️ Calculando ruta: ' + origen + ' → ' + destino + '\n\n(En una implementación completa, esto calcularía la ruta óptima)');
+            
+            // Simular diferentes rutas
+            simulateRouteCalculation(origen, destino);
+        }
+        
+        function simulateRouteCalculation(from, to) {
+            // Simular cálculo de diferentes rutas
+            const routes = [
+                {name: "Ruta Más Corta", color: "blue", nodes: [from, 2, 3, to]},
+                {name: "Ruta Más Segura", color: "green", nodes: [from, 6, 7, to]},
+                {name: "Ruta Balanceada", color: "purple", nodes: [from, 2, 7, to]}
+            ];
+            
+            routes.forEach(route => {
+                if (route.nodes.length >= 2) {
+                    drawRoute(route.nodes, route.name, route.color);
+                }
+            });
+        }
+        
+        function drawRoute(nodeIds, name, color) {
+            // Esta función dibujaría la ruta en el mapa
+            // En una implementación real, usaríamos las coordenadas reales
+            console.log('Dibujando ruta:', name, nodeIds, color);
+            alert('✅ ' + name + ' calculada: ' + nodeIds.join(' → '));
+        }
+        
+        function updateMap() {
+            // Actualizar visualización del mapa según selección
+            console.log('Origen:', origen, 'Destino:', destino);
+        }
+        </script>
+        
+    
+        <div style="position: fixed; 
+                    bottom: 20px; right: 20px; width: 250px;
+                    background: rgba(0,0,0,0.8); color: white;
+                    border: 1px solid #333; padding: 10px;
+                    border-radius: 5px; z-index: 9999; font-size: 12px;">
+            <b>🎯 LEYENDA</b><br>
+            <hr style="margin: 5px 0; border-color: #333;">
+            <table width="100%">
+            <tr><td><span style="color:#00ff00">━━━━</span></td><td>Ciclovías</td></tr>
+            <tr><td><span style="color:#666666">━━</span></td><td>Calles</td></tr>
+            <tr><td><span style="color:blue">●</span></td><td>Nodos</td></tr>
+            </table>
+            <hr style="margin: 5px 0; border-color: #333;">
+            <b>Área:</b> Los Héroes<br>
+            <b>Nodos:</b> 8 principales<br>
+            <b>Conexiones:</b> 11
+        </div>
+        
+    
+            <div class="folium-map" id="map_9c31805b10d8dfc160f541f2b66272f0" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_9c31805b10d8dfc160f541f2b66272f0 = L.map(
+                "map_9c31805b10d8dfc160f541f2b66272f0",
+                {
+                    center: [-33.451, -70.663],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 16,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+            L.control.scale().addTo(map_9c31805b10d8dfc160f541f2b66272f0);
+
+            
+
+        
+    
+            var tile_layer_e6e6c68dc3f28bc4eb5d0d2f2c214940 = L.tileLayer(
+                "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 20,
+  "maxNativeZoom": 20,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors \u0026copy; \u003ca href=\"https://carto.com/attributions\"\u003eCARTO\u003c/a\u003e",
+  "subdomains": "abcd",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_e6e6c68dc3f28bc4eb5d0d2f2c214940.addTo(map_9c31805b10d8dfc160f541f2b66272f0);
+        
+    
+            var poly_line_f3a85db4141820a6849382dd49048b91 = L.polyline(
+                [[-33.451, -70.663], [-33.4505, -70.661]],
+                {"bubblingMouseEvents": true, "color": "#666666", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#666666", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.6, "smoothFactor": 1.0, "stroke": true, "weight": 2}
+            ).addTo(map_9c31805b10d8dfc160f541f2b66272f0);
+        
+    
+        var popup_5f14d4617e5e18926031bdfa64a217d1 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_7d25060b1a89c2e30b685346b1058363 = $(`<div id="html_7d25060b1a89c2e30b685346b1058363" style="width: 100.0%; height: 100.0%;">Calle 101</div>`)[0];
+                popup_5f14d4617e5e18926031bdfa64a217d1.setContent(html_7d25060b1a89c2e30b685346b1058363);
+            
+        
+
+        poly_line_f3a85db4141820a6849382dd49048b91.bindPopup(popup_5f14d4617e5e18926031bdfa64a217d1)
+        ;
+
+        
+    
+    
+            poly_line_f3a85db4141820a6849382dd49048b91.bindTooltip(
+                `<div>
+                     Click para detalles
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_03125907dafe06ebda03d242573ad8f6 = L.polyline(
+                [[-33.4505, -70.661], [-33.45, -70.659]],
+                {"bubblingMouseEvents": true, "color": "#666666", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#666666", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.6, "smoothFactor": 1.0, "stroke": true, "weight": 2}
+            ).addTo(map_9c31805b10d8dfc160f541f2b66272f0);
+        
+    
+        var popup_e30c52fead473a76bff7261fdef5c227 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_17eabee2a89da572590f89bef472cb23 = $(`<div id="html_17eabee2a89da572590f89bef472cb23" style="width: 100.0%; height: 100.0%;">Calle 102</div>`)[0];
+                popup_e30c52fead473a76bff7261fdef5c227.setContent(html_17eabee2a89da572590f89bef472cb23);
+            
+        
+
+        poly_line_03125907dafe06ebda03d242573ad8f6.bindPopup(popup_e30c52fead473a76bff7261fdef5c227)
+        ;
+
+        
+    
+    
+            poly_line_03125907dafe06ebda03d242573ad8f6.bindTooltip(
+                `<div>
+                     Click para detalles
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_40c66b28d19bf9967cc221c2fa0594f1 = L.polyline(
+                [[-33.45, -70.659], [-33.4495, -70.657]],
+                {"bubblingMouseEvents": true, "color": "#666666", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#666666", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.6, "smoothFactor": 1.0, "stroke": true, "weight": 2}
+            ).addTo(map_9c31805b10d8dfc160f541f2b66272f0);
+        
+    
+        var popup_8b830f76a9b9c28dc73a27c786a9fa6d = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_5b38652688b0d962f6b4220eb00a6b8a = $(`<div id="html_5b38652688b0d962f6b4220eb00a6b8a" style="width: 100.0%; height: 100.0%;">Calle 103</div>`)[0];
+                popup_8b830f76a9b9c28dc73a27c786a9fa6d.setContent(html_5b38652688b0d962f6b4220eb00a6b8a);
+            
+        
+
+        poly_line_40c66b28d19bf9967cc221c2fa0594f1.bindPopup(popup_8b830f76a9b9c28dc73a27c786a9fa6d)
+        ;
+
+        
+    
+    
+            poly_line_40c66b28d19bf9967cc221c2fa0594f1.bindTooltip(
+                `<div>
+                     Click para detalles
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_64d9cd3bb9d9e971a8dd82a2ee16855e = L.polyline(
+                [[-33.4495, -70.657], [-33.449, -70.655]],
+                {"bubblingMouseEvents": true, "color": "#666666", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#666666", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.6, "smoothFactor": 1.0, "stroke": true, "weight": 2}
+            ).addTo(map_9c31805b10d8dfc160f541f2b66272f0);
+        
+    
+        var popup_ff894ddc06b51e2e6dad6f190c5440bf = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_2ff190b40ae31b8878dd55a929ca8e6e = $(`<div id="html_2ff190b40ae31b8878dd55a929ca8e6e" style="width: 100.0%; height: 100.0%;">Calle 104</div>`)[0];
+                popup_ff894ddc06b51e2e6dad6f190c5440bf.setContent(html_2ff190b40ae31b8878dd55a929ca8e6e);
+            
+        
+
+        poly_line_64d9cd3bb9d9e971a8dd82a2ee16855e.bindPopup(popup_ff894ddc06b51e2e6dad6f190c5440bf)
+        ;
+
+        
+    
+    
+            poly_line_64d9cd3bb9d9e971a8dd82a2ee16855e.bindTooltip(
+                `<div>
+                     Click para detalles
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_5f52c9bb2b619df3e131f903db246186 = L.polyline(
+                [[-33.451, -70.663], [-33.452, -70.665]],
+                {"bubblingMouseEvents": true, "color": "#00ff00", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#00ff00", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 4}
+            ).addTo(map_9c31805b10d8dfc160f541f2b66272f0);
+        
+    
+        var popup_dd5b352ed40cec115e617c19213fbb6b = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_b2f74f568e4edb0e7bca47ea2202a312 = $(`<div id="html_b2f74f568e4edb0e7bca47ea2202a312" style="width: 100.0%; height: 100.0%;">Ciclovía 201</div>`)[0];
+                popup_dd5b352ed40cec115e617c19213fbb6b.setContent(html_b2f74f568e4edb0e7bca47ea2202a312);
+            
+        
+
+        poly_line_5f52c9bb2b619df3e131f903db246186.bindPopup(popup_dd5b352ed40cec115e617c19213fbb6b)
+        ;
+
+        
+    
+    
+            poly_line_5f52c9bb2b619df3e131f903db246186.bindTooltip(
+                `<div>
+                     Click para detalles
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_9c9425b978974caedff5b225e93637b4 = L.polyline(
+                [[-33.452, -70.665], [-33.4515, -70.667]],
+                {"bubblingMouseEvents": true, "color": "#00ff00", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#00ff00", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 4}
+            ).addTo(map_9c31805b10d8dfc160f541f2b66272f0);
+        
+    
+        var popup_ee355322c82ababa66302a4c45ca9bbd = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_c9c4bb9eef2177fbffe3897a03714ebc = $(`<div id="html_c9c4bb9eef2177fbffe3897a03714ebc" style="width: 100.0%; height: 100.0%;">Ciclovía 202</div>`)[0];
+                popup_ee355322c82ababa66302a4c45ca9bbd.setContent(html_c9c4bb9eef2177fbffe3897a03714ebc);
+            
+        
+
+        poly_line_9c9425b978974caedff5b225e93637b4.bindPopup(popup_ee355322c82ababa66302a4c45ca9bbd)
+        ;
+
+        
+    
+    
+            poly_line_9c9425b978974caedff5b225e93637b4.bindTooltip(
+                `<div>
+                     Click para detalles
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_7a8c2c2efa980dec2a1f13badf6cafaf = L.polyline(
+                [[-33.4515, -70.667], [-33.451, -70.669]],
+                {"bubblingMouseEvents": true, "color": "#00ff00", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#00ff00", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 4}
+            ).addTo(map_9c31805b10d8dfc160f541f2b66272f0);
+        
+    
+        var popup_6518a2a229cef6c2b1c2b2bedc0025d0 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_a3cf31f766da91ff03a1948d6199b51d = $(`<div id="html_a3cf31f766da91ff03a1948d6199b51d" style="width: 100.0%; height: 100.0%;">Ciclovía 203</div>`)[0];
+                popup_6518a2a229cef6c2b1c2b2bedc0025d0.setContent(html_a3cf31f766da91ff03a1948d6199b51d);
+            
+        
+
+        poly_line_7a8c2c2efa980dec2a1f13badf6cafaf.bindPopup(popup_6518a2a229cef6c2b1c2b2bedc0025d0)
+        ;
+
+        
+    
+    
+            poly_line_7a8c2c2efa980dec2a1f13badf6cafaf.bindTooltip(
+                `<div>
+                     Click para detalles
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_2a9c1ab5585e6a8878e3c1b82080c27b = L.polyline(
+                [[-33.4505, -70.661], [-33.452, -70.665]],
+                {"bubblingMouseEvents": true, "color": "#666666", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#666666", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.6, "smoothFactor": 1.0, "stroke": true, "weight": 2}
+            ).addTo(map_9c31805b10d8dfc160f541f2b66272f0);
+        
+    
+        var popup_f679bba1382b813be0a234c32d68f989 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_853bf7119372d9e2aba2744e1a63a996 = $(`<div id="html_853bf7119372d9e2aba2744e1a63a996" style="width: 100.0%; height: 100.0%;">Calle 301</div>`)[0];
+                popup_f679bba1382b813be0a234c32d68f989.setContent(html_853bf7119372d9e2aba2744e1a63a996);
+            
+        
+
+        poly_line_2a9c1ab5585e6a8878e3c1b82080c27b.bindPopup(popup_f679bba1382b813be0a234c32d68f989)
+        ;
+
+        
+    
+    
+            poly_line_2a9c1ab5585e6a8878e3c1b82080c27b.bindTooltip(
+                `<div>
+                     Click para detalles
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_7eef9abaa346782510c5959769ef5a14 = L.polyline(
+                [[-33.45, -70.659], [-33.4515, -70.667]],
+                {"bubblingMouseEvents": true, "color": "#00ff00", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#00ff00", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 4}
+            ).addTo(map_9c31805b10d8dfc160f541f2b66272f0);
+        
+    
+        var popup_f96082aa43d0f7616c447734cec37bec = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_11d4e84b2d2019fee81e2507972daa2b = $(`<div id="html_11d4e84b2d2019fee81e2507972daa2b" style="width: 100.0%; height: 100.0%;">Ciclovía 302</div>`)[0];
+                popup_f96082aa43d0f7616c447734cec37bec.setContent(html_11d4e84b2d2019fee81e2507972daa2b);
+            
+        
+
+        poly_line_7eef9abaa346782510c5959769ef5a14.bindPopup(popup_f96082aa43d0f7616c447734cec37bec)
+        ;
+
+        
+    
+    
+            poly_line_7eef9abaa346782510c5959769ef5a14.bindTooltip(
+                `<div>
+                     Click para detalles
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_8fa755db668e53e42067b38301fd68d1 = L.polyline(
+                [[-33.4495, -70.657], [-33.451, -70.669]],
+                {"bubblingMouseEvents": true, "color": "#666666", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#666666", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.6, "smoothFactor": 1.0, "stroke": true, "weight": 2}
+            ).addTo(map_9c31805b10d8dfc160f541f2b66272f0);
+        
+    
+        var popup_97a8688cc50d6250385e24d58440ce25 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_5903040f705aa155fdada139add4cba6 = $(`<div id="html_5903040f705aa155fdada139add4cba6" style="width: 100.0%; height: 100.0%;">Calle 303</div>`)[0];
+                popup_97a8688cc50d6250385e24d58440ce25.setContent(html_5903040f705aa155fdada139add4cba6);
+            
+        
+
+        poly_line_8fa755db668e53e42067b38301fd68d1.bindPopup(popup_97a8688cc50d6250385e24d58440ce25)
+        ;
+
+        
+    
+    
+            poly_line_8fa755db668e53e42067b38301fd68d1.bindTooltip(
+                `<div>
+                     Click para detalles
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_fc3200eeb8785d10258d1b5dde6181db = L.marker(
+                [-33.451, -70.663],
+                {
+}
+            ).addTo(map_9c31805b10d8dfc160f541f2b66272f0);
+        
+    
+            var icon_ba6e7557dcd9a5b3a9d4b598acaecf89 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "circle",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_a13e19ddad80f8d7f891677fbf7bbc3f = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_1e9ffd888a02b62bb47156fd2c6555d6 = $(`<div id="html_1e9ffd888a02b62bb47156fd2c6555d6" style="width: 100.0%; height: 100.0%;">                 <b>Metro Los Héroes</b><br>                 <button onclick="selectOrigin(1)">🗺️ Seleccionar Origen</button>                 <button onclick="selectDest(1)">🎯 Seleccionar Destino</button>                 </div>`)[0];
+                popup_a13e19ddad80f8d7f891677fbf7bbc3f.setContent(html_1e9ffd888a02b62bb47156fd2c6555d6);
+            
+        
+
+        marker_fc3200eeb8785d10258d1b5dde6181db.bindPopup(popup_a13e19ddad80f8d7f891677fbf7bbc3f)
+        ;
+
+        
+    
+    
+            marker_fc3200eeb8785d10258d1b5dde6181db.bindTooltip(
+                `<div>
+                     Click para seleccionar: Metro Los Héroes
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_fc3200eeb8785d10258d1b5dde6181db.setIcon(icon_ba6e7557dcd9a5b3a9d4b598acaecf89);
+            
+    
+            var marker_8bae56a46433b9282ec64bcb691dd53b = L.marker(
+                [-33.4505, -70.661],
+                {
+}
+            ).addTo(map_9c31805b10d8dfc160f541f2b66272f0);
+        
+    
+            var icon_a61b6ccd7493cb3e75c93816e1abd239 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "circle",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_d09bb2dce341fe54df98aa463c93193a = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_9e4711b7bf4544f7c50512c434cd9946 = $(`<div id="html_9e4711b7bf4544f7c50512c434cd9946" style="width: 100.0%; height: 100.0%;">                 <b>Alameda Central</b><br>                 <button onclick="selectOrigin(2)">🗺️ Seleccionar Origen</button>                 <button onclick="selectDest(2)">🎯 Seleccionar Destino</button>                 </div>`)[0];
+                popup_d09bb2dce341fe54df98aa463c93193a.setContent(html_9e4711b7bf4544f7c50512c434cd9946);
+            
+        
+
+        marker_8bae56a46433b9282ec64bcb691dd53b.bindPopup(popup_d09bb2dce341fe54df98aa463c93193a)
+        ;
+
+        
+    
+    
+            marker_8bae56a46433b9282ec64bcb691dd53b.bindTooltip(
+                `<div>
+                     Click para seleccionar: Alameda Central
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_8bae56a46433b9282ec64bcb691dd53b.setIcon(icon_a61b6ccd7493cb3e75c93816e1abd239);
+            
+    
+            var marker_6d6a346a17f3e4d1cc67ffd2aa356705 = L.marker(
+                [-33.45, -70.659],
+                {
+}
+            ).addTo(map_9c31805b10d8dfc160f541f2b66272f0);
+        
+    
+            var icon_103b37f326b052d107ddd5b111fab900 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "circle",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_c31f62e9f9ebf3fbd2bbb1c30396ddd6 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_fd07f34c237767a7d81387c2b3dc602f = $(`<div id="html_fd07f34c237767a7d81387c2b3dc602f" style="width: 100.0%; height: 100.0%;">                 <b>Av. Portugal</b><br>                 <button onclick="selectOrigin(3)">🗺️ Seleccionar Origen</button>                 <button onclick="selectDest(3)">🎯 Seleccionar Destino</button>                 </div>`)[0];
+                popup_c31f62e9f9ebf3fbd2bbb1c30396ddd6.setContent(html_fd07f34c237767a7d81387c2b3dc602f);
+            
+        
+
+        marker_6d6a346a17f3e4d1cc67ffd2aa356705.bindPopup(popup_c31f62e9f9ebf3fbd2bbb1c30396ddd6)
+        ;
+
+        
+    
+    
+            marker_6d6a346a17f3e4d1cc67ffd2aa356705.bindTooltip(
+                `<div>
+                     Click para seleccionar: Av. Portugal
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_6d6a346a17f3e4d1cc67ffd2aa356705.setIcon(icon_103b37f326b052d107ddd5b111fab900);
+            
+    
+            var marker_5dae8273693e1dee18d5cc679becde9e = L.marker(
+                [-33.4495, -70.657],
+                {
+}
+            ).addTo(map_9c31805b10d8dfc160f541f2b66272f0);
+        
+    
+            var icon_8cc7287a3eda580ea1850aaf2ad6203f = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "circle",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_e81c856a3d94db83d3532645926c8655 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_3e253addd5533fc8195bcaaf70297448 = $(`<div id="html_3e253addd5533fc8195bcaaf70297448" style="width: 100.0%; height: 100.0%;">                 <b>Ejército</b><br>                 <button onclick="selectOrigin(4)">🗺️ Seleccionar Origen</button>                 <button onclick="selectDest(4)">🎯 Seleccionar Destino</button>                 </div>`)[0];
+                popup_e81c856a3d94db83d3532645926c8655.setContent(html_3e253addd5533fc8195bcaaf70297448);
+            
+        
+
+        marker_5dae8273693e1dee18d5cc679becde9e.bindPopup(popup_e81c856a3d94db83d3532645926c8655)
+        ;
+
+        
+    
+    
+            marker_5dae8273693e1dee18d5cc679becde9e.bindTooltip(
+                `<div>
+                     Click para seleccionar: Ejército
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_5dae8273693e1dee18d5cc679becde9e.setIcon(icon_8cc7287a3eda580ea1850aaf2ad6203f);
+            
+    
+            var marker_6030405943e35b73ef39324d0ca1ac5f = L.marker(
+                [-33.449, -70.655],
+                {
+}
+            ).addTo(map_9c31805b10d8dfc160f541f2b66272f0);
+        
+    
+            var icon_9babb34c126cd8381facb5ff6d2f5537 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "circle",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_73beed9fc55b21559c202787b5073304 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_512ba2d063947768260614571e4cf7b2 = $(`<div id="html_512ba2d063947768260614571e4cf7b2" style="width: 100.0%; height: 100.0%;">                 <b>Blanco Encalada</b><br>                 <button onclick="selectOrigin(5)">🗺️ Seleccionar Origen</button>                 <button onclick="selectDest(5)">🎯 Seleccionar Destino</button>                 </div>`)[0];
+                popup_73beed9fc55b21559c202787b5073304.setContent(html_512ba2d063947768260614571e4cf7b2);
+            
+        
+
+        marker_6030405943e35b73ef39324d0ca1ac5f.bindPopup(popup_73beed9fc55b21559c202787b5073304)
+        ;
+
+        
+    
+    
+            marker_6030405943e35b73ef39324d0ca1ac5f.bindTooltip(
+                `<div>
+                     Click para seleccionar: Blanco Encalada
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_6030405943e35b73ef39324d0ca1ac5f.setIcon(icon_9babb34c126cd8381facb5ff6d2f5537);
+            
+    
+            var marker_e912cf465d131755625620af4094b037 = L.marker(
+                [-33.452, -70.665],
+                {
+}
+            ).addTo(map_9c31805b10d8dfc160f541f2b66272f0);
+        
+    
+            var icon_e55288c1155191fb99182d1c1dc4dc69 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "circle",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_e32cbe29f8905cc1cfa50b8840dbacd9 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_7458646aedd90f98245714437326bafc = $(`<div id="html_7458646aedd90f98245714437326bafc" style="width: 100.0%; height: 100.0%;">                 <b>Toesca</b><br>                 <button onclick="selectOrigin(6)">🗺️ Seleccionar Origen</button>                 <button onclick="selectDest(6)">🎯 Seleccionar Destino</button>                 </div>`)[0];
+                popup_e32cbe29f8905cc1cfa50b8840dbacd9.setContent(html_7458646aedd90f98245714437326bafc);
+            
+        
+
+        marker_e912cf465d131755625620af4094b037.bindPopup(popup_e32cbe29f8905cc1cfa50b8840dbacd9)
+        ;
+
+        
+    
+    
+            marker_e912cf465d131755625620af4094b037.bindTooltip(
+                `<div>
+                     Click para seleccionar: Toesca
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_e912cf465d131755625620af4094b037.setIcon(icon_e55288c1155191fb99182d1c1dc4dc69);
+            
+    
+            var marker_29f4dd2f054b702825ad71413d592c61 = L.marker(
+                [-33.4515, -70.667],
+                {
+}
+            ).addTo(map_9c31805b10d8dfc160f541f2b66272f0);
+        
+    
+            var icon_d05ef4322deb8290aac8384c9a0f68e6 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "circle",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_bf14439a3babe51a0e06c0f2959ac830 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_2dd135e3c7d276b8624030964b5ce7df = $(`<div id="html_2dd135e3c7d276b8624030964b5ce7df" style="width: 100.0%; height: 100.0%;">                 <b>San Ignacio</b><br>                 <button onclick="selectOrigin(7)">🗺️ Seleccionar Origen</button>                 <button onclick="selectDest(7)">🎯 Seleccionar Destino</button>                 </div>`)[0];
+                popup_bf14439a3babe51a0e06c0f2959ac830.setContent(html_2dd135e3c7d276b8624030964b5ce7df);
+            
+        
+
+        marker_29f4dd2f054b702825ad71413d592c61.bindPopup(popup_bf14439a3babe51a0e06c0f2959ac830)
+        ;
+
+        
+    
+    
+            marker_29f4dd2f054b702825ad71413d592c61.bindTooltip(
+                `<div>
+                     Click para seleccionar: San Ignacio
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_29f4dd2f054b702825ad71413d592c61.setIcon(icon_d05ef4322deb8290aac8384c9a0f68e6);
+            
+    
+            var marker_2e32a621a6b6afb524f35098a312cdd9 = L.marker(
+                [-33.451, -70.669],
+                {
+}
+            ).addTo(map_9c31805b10d8dfc160f541f2b66272f0);
+        
+    
+            var icon_9b5de285cee935817161c7091b81f377 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "circle",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_10ffe7ebcc23da851f8689d01ba43ab1 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_4177da394e0a175bad6397a8e56c2a2c = $(`<div id="html_4177da394e0a175bad6397a8e56c2a2c" style="width: 100.0%; height: 100.0%;">                 <b>Cumming</b><br>                 <button onclick="selectOrigin(8)">🗺️ Seleccionar Origen</button>                 <button onclick="selectDest(8)">🎯 Seleccionar Destino</button>                 </div>`)[0];
+                popup_10ffe7ebcc23da851f8689d01ba43ab1.setContent(html_4177da394e0a175bad6397a8e56c2a2c);
+            
+        
+
+        marker_2e32a621a6b6afb524f35098a312cdd9.bindPopup(popup_10ffe7ebcc23da851f8689d01ba43ab1)
+        ;
+
+        
+    
+    
+            marker_2e32a621a6b6afb524f35098a312cdd9.bindTooltip(
+                `<div>
+                     Click para seleccionar: Cumming
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_2e32a621a6b6afb524f35098a312cdd9.setIcon(icon_9b5de285cee935817161c7091b81f377);
+            
+</script>
+</html>
